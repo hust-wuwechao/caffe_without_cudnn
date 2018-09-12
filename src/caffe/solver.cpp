@@ -119,7 +119,8 @@ void Solver<Dtype>::InitTrainNet() {
 }
 
 template <typename Dtype>
-void Solver<Dtype>::InitTestNets() {
+void Solver<Dtype>::InitTestNets() 
+{
   const bool has_net_param = param_.has_net_param();
   const bool has_net_file = param_.has_net();
   const int num_generic_nets = has_net_param + has_net_file;
@@ -205,7 +206,8 @@ void Solver<Dtype>::Step(int iters) {
   losses_.clear();
   smoothed_loss_ = 0;
   iteration_timer_.Start();
-
+  Timer total_timer;
+  total_timer.Start();
   while (iter_ < stop_iter) {
     // zero-init the params
     net_->ClearParamDiffs();
@@ -227,8 +229,14 @@ void Solver<Dtype>::Step(int iters) {
     net_->set_debug_info(display && param_.debug_info());
     // accumulate the loss and gradient
     Dtype loss = 0;
-    for (int i = 0; i < param_.iter_size(); ++i) {
+    for (int i = 0; i < param_.iter_size(); ++i) 
+    {
+      Timer iter_timer;
+      iter_timer.Start();
       loss += net_->ForwardBackward();
+      LOG(INFO) << "Iteration: " << j + 1 << " forward-backward time: "
+      << iter_timer.MilliSeconds() << " ms."; 
+
     }
     loss /= param_.iter_size();
     // average the loss across iterations for smoothed reporting
@@ -275,12 +283,22 @@ void Solver<Dtype>::Step(int iters) {
          (request == SolverAction::SNAPSHOT)) {
       Snapshot();
     }
-    if (SolverAction::STOP == request) {
+    if (SolverAction::STOP == request) 
+    {
       requested_early_exit_ = true;
       // Break out of training loop.
       break;
     }
+    if(iter_%100==0)
+    {
+        LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /
+        (iter_*param_.iter_size())<< " ms.";
+    }
+
   }
+  total_timer.Stop();
+ LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /stop_iter<< " ms.";
+
 }
 
 template <typename Dtype>
