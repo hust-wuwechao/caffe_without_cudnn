@@ -234,8 +234,8 @@ void Solver<Dtype>::Step(int iters) {
       Timer iter_timer;
       iter_timer.Start();
       loss += net_->ForwardBackward();
-      LOG(INFO) << "Iteration: " << j + 1 << " forward-backward time: "
-      << iter_timer.MilliSeconds() << " ms."; 
+      LOG(INFO) << "  iter_  Iteration: "<<iter_<<"-"<<i << " forward-backward time: "
+      << iter_timer.MilliSeconds() << " ms.";
 
     }
     loss /= param_.iter_size();
@@ -289,7 +289,7 @@ void Solver<Dtype>::Step(int iters) {
       // Break out of training loop.
       break;
     }
-    if(iter_%100==0)
+    if(iter_%10==0)
     {
         LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /
         (iter_*param_.iter_size())<< " ms.";
