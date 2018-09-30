@@ -19,6 +19,8 @@
 #include "caffe/util/insert_splits.hpp"
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/upgrade_proto.hpp"
+using caffe::Timer;
+
 namespace caffe {
 
 template <typename Dtype>
