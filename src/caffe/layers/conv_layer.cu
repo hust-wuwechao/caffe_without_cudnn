@@ -6,7 +6,8 @@ namespace caffe {
 
 template <typename Dtype>
 void ConvolutionLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top) {
+      const vector<Blob<Dtype>*>& top) 
+      {
   const Dtype* weight = this->blobs_[0]->gpu_data();
   for (int i = 0; i < bottom.size(); ++i) {
     const Dtype* bottom_data = bottom[i]->gpu_data();
@@ -32,23 +33,39 @@ void ConvolutionLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     // Bias gradient, if necessary.
     if (this->bias_term_ && this->param_propagate_down_[1]) {
       Dtype* bias_diff = this->blobs_[1]->mutable_gpu_diff();
-      for (int n = 0; n < this->num_; ++n) {
-        this->backward_gpu_bias(bias_diff, top_diff + n * this->top_dim_);
+      Timer timer;
+      timer.Start();
+      for (int n = 0; n < this->num_; ++n)
+      {
+        //
+        
+         this->backward_gpu_bias(bias_diff, top_diff + n * this->top_dim_);
+        
       }
+       LOG(INFO) << "Average B-Backward: " << timer.MilliSeconds()<< " ms.";
     }
-    if (this->param_propagate_down_[0] || propagate_down[i]) {
+    if (this->param_propagate_down_[0] || propagate_down[i]) 
+    {
       const Dtype* bottom_data = bottom[i]->gpu_data();
       Dtype* bottom_diff = bottom[i]->mutable_gpu_diff();
-      for (int n = 0; n < this->num_; ++n) {
+      Timer timer1;
+      timer1.Start();
+      for (int n = 0; n < this->num_; ++n) 
+      {
         // gradient w.r.t. weight. Note that we will accumulate diffs.
         if (this->param_propagate_down_[0]) {
           this->weight_gpu_gemm(bottom_data + n * this->bottom_dim_,
               top_diff + n * this->top_dim_, weight_diff);
-        }
+      }
+      LOG(INFO) << "Average W-Backward: " << timer1.MilliSeconds()<< " ms.";
         // gradient w.r.t. bottom data, if necessary.
-        if (propagate_down[i]) {
+        if (propagate_down[i]) 
+        {
+          Timer timer2;
+          timer2.Start();
           this->backward_gpu_gemm(top_diff + n * this->top_dim_, weight,
               bottom_diff + n * this->bottom_dim_);
+          LOG(INFO) << "Average A-Backward: " << timer2.MilliSeconds()<< " ms.";
         }
       }
     }
