@@ -1,7 +1,7 @@
 #include <vector>
 
 #include "caffe/layers/conv_layer.hpp"
-using caffe::Timer;
+
 namespace caffe {
 
 template <typename Dtype>
