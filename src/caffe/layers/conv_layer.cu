@@ -1,7 +1,24 @@
 #include <vector>
 
 #include "caffe/layers/conv_layer.hpp"
+#include <algorithm>
+#include <map>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
+#include "hdf5.h"
+
+#include "caffe/common.hpp"
+#include "caffe/layer.hpp"
+#include "caffe/net.hpp"
+#include "caffe/parallel.hpp"
+#include "caffe/proto/caffe.pb.h"
+#include "caffe/util/hdf5.hpp"
+#include "caffe/util/insert_splits.hpp"
+#include "caffe/util/math_functions.hpp"
+#include "caffe/util/upgrade_proto.hpp"
 namespace caffe {
 
 template <typename Dtype>
