@@ -30,7 +30,7 @@
 #include "boost/algorithm/string.hpp"
 #include "caffe/caffe.hpp"
 #include "caffe/util/signal_handler.h"
-using caffe::Timer;
+//using caffe::Timer;
 
 namespace caffe {
 
