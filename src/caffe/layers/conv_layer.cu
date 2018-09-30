@@ -30,6 +30,28 @@
 #include "boost/algorithm/string.hpp"
 #include "caffe/caffe.hpp"
 #include "caffe/util/signal_handler.h"
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
+#include <cstring>
+#include <map>
+#include <string>
+#include <vector>
+
+#include "boost/algorithm/string.hpp"
+#include "caffe/caffe.hpp"
+#include "caffe/util/signal_handler.h"
+
+using caffe::Blob;
+using caffe::Caffe;
+using caffe::Net;
+using caffe::Layer;
+using caffe::Solver;
+using caffe::shared_ptr;
+using caffe::string;
+using caffe::Timer;
+using caffe::vector;
+using std::ostringstream;
 //using caffe::Timer;
 
 namespace caffe {
