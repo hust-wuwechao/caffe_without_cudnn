@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-
+#include<cuda_profiler_api.h>
 #include "boost/algorithm/string.hpp"
 #include "caffe/solver.hpp"
 #include "caffe/util/format.hpp"
@@ -205,9 +205,10 @@ void Solver<Dtype>::Step(int iters) {
   int average_loss = this->param_.average_loss();
   losses_.clear();
   smoothed_loss_ = 0;
-  iteration_timer_.Start();
-  Timer total_timer;
-  total_timer.Start();
+  // iteration_timer_.Start();
+ //  Timer total_timer;
+ //  total_timer.Start();
+  cudaProfilerStart();
   while (iter_ < stop_iter) {
     // zero-init the params
     net_->ClearParamDiffs();
@@ -231,11 +232,11 @@ void Solver<Dtype>::Step(int iters) {
     Dtype loss = 0;
     for (int i = 0; i < param_.iter_size(); ++i) 
     {
-      Timer iter_timer;
-      iter_timer.Start();
+     /*  Timer iter_timer;
+      iter_timer.Start(); */
       loss += net_->ForwardBackward();
-      LOG(INFO) << "  iter_  Iteration: "<<iter_<<"-"<<i << " forward-backward time: "
-      << iter_timer.MilliSeconds() << " ms.";
+      //LOG(INFO) << "  iter_  Iteration: "<<iter_<<"-"<<i << " forward-backward time: "
+     // << iter_timer.MilliSeconds() << " ms.";
 
     }
     loss /= param_.iter_size();
@@ -289,15 +290,16 @@ void Solver<Dtype>::Step(int iters) {
       // Break out of training loop.
       break;
     }
-    if(iter_%10==0)
+    /* if(iter_%10==0)
     {
         LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /
         (iter_*param_.iter_size())<< " ms.";
-    }
+    } */
 
   }
-  total_timer.Stop();
- LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /stop_iter<< " ms.";
+  cudaProfilerStop();
+  //total_timer.Stop();
+  //LOG(INFO) << "Average Forward-Backward: " << total_timer.MilliSeconds() /stop_iter<< " ms.";
 
 }
 
