@@ -243,13 +243,14 @@ void Solver<Dtype>::Step(int iters) {
     // average the loss across iterations for smoothed reporting
     UpdateSmoothedLoss(loss, start_iter, average_loss);
     if (display) {
-      float lapse = iteration_timer_.Seconds();
-      float per_s = (iter_ - iterations_last_) / (lapse ? lapse : 1);
-      LOG_IF(INFO, Caffe::root_solver()) << "Iteration " << iter_
-          << " (" << per_s << " iter/s, " << lapse << "s/"
+     // float lapse = iteration_timer_.Seconds();
+     // float per_s = (iter_ - iterations_last_) / (lapse ? lapse : 1);
+      LOG_IF(INFO, Caffe::root_solver())
+         // << "Iteration " << iter_
+         // << " (" << per_s << " iter/s, " << lapse << "s/"
           << param_.display() << " iters), loss = " << smoothed_loss_;
-      iteration_timer_.Start();
-      iterations_last_ = iter_;
+      // iteration_timer_.Start();
+      // iterations_last_ = iter_;
       const vector<Blob<Dtype>*>& result = net_->output_blobs();
       int score_index = 0;
       for (int j = 0; j < result.size(); ++j) {
